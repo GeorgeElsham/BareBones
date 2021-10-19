@@ -1,0 +1,7 @@
+# IntelliJ IDEA
+.idea
+out
+BareBones.iml
+
+# Other
+.DS_Store
