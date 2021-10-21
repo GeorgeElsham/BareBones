@@ -1,0 +1,12 @@
+package Interpreter.Node.Nodes;
+
+public enum Nodes {
+  BLOCK,
+  BOOLEAN_EXPRESSION,
+  DO_KEYWORD,
+  END_KEYWORD,
+  INTEGER_IDENTIFIER,
+  INTEGER_LITERAL,
+  TO_KEYWORD,
+  WHILE_KEYWORD
+}
