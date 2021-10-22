@@ -1,6 +1,6 @@
-package Interpreter.Node.Nodes;
+package Interpreter.Node;
 
-public enum Nodes {
+public enum NodeKind {
   BLOCK,
   BOOLEAN_EXPRESSION,
   CLEAR_KEYWORD,

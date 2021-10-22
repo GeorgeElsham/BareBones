@@ -1,6 +1,6 @@
 package Interpreter.Node.Nodes;
 
-import Interpreter.Node.Node;
+import Interpreter.Node.*;
 
 public class LineTerminator implements Node {
   /**
@@ -9,7 +9,7 @@ public class LineTerminator implements Node {
    * @return Kind of node.
    */
   @Override
-  public Nodes getKind() {
-    return Nodes.LINE_TERMINATOR;
+  public NodeKind getKind() {
+    return NodeKind.LINE_TERMINATOR;
   }
 }

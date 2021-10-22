@@ -1,8 +1,18 @@
 package Interpreter.Node.Nodes;
 
-import Interpreter.Node.Node;
+import Interpreter.Node.*;
 
 public class BooleanExpression implements Node {
+  private final Node[] nodes;
+
+  public BooleanExpression(Node[] nodes) {
+    this.nodes = nodes;
+  }
+
+  public boolean evaluate() {
+    // Temporary
+    return true;
+  }
 
   /**
    * Gets the kind of node this is.
@@ -10,7 +20,7 @@ public class BooleanExpression implements Node {
    * @return Kind of node.
    */
   @Override
-  public Nodes getKind() {
-    return Nodes.BOOLEAN_EXPRESSION;
+  public NodeKind getKind() {
+    return NodeKind.BOOLEAN_EXPRESSION;
   }
 }

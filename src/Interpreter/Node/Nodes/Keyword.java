@@ -1,23 +1,23 @@
 package Interpreter.Node.Nodes;
 
 import Interpreter.InterpreterException.UnknownKeyword;
-import Interpreter.Node.Node;
+import Interpreter.Node.*;
 import java.util.HashMap;
 
 public class Keyword implements Node {
-  private static final HashMap<String, Nodes> all;
+  private static final HashMap<String, NodeKind> all;
   private final String name;
 
   static {
-    HashMap<String, Nodes> map = new HashMap<>();
-    map.put("clear", Nodes.CLEAR_KEYWORD);
-    map.put("copy", Nodes.COPY_KEYWORD);
-    map.put("decr", Nodes.DECR_KEYWORD);
-    map.put("do", Nodes.DO_KEYWORD);
-    map.put("end", Nodes.END_KEYWORD);
-    map.put("incr", Nodes.INCR_KEYWORD);
-    map.put("to", Nodes.TO_KEYWORD);
-    map.put("while", Nodes.WHILE_KEYWORD);
+    HashMap<String, NodeKind> map = new HashMap<>();
+    map.put("clear", NodeKind.CLEAR_KEYWORD);
+    map.put("copy", NodeKind.COPY_KEYWORD);
+    map.put("decr", NodeKind.DECR_KEYWORD);
+    map.put("do", NodeKind.DO_KEYWORD);
+    map.put("end", NodeKind.END_KEYWORD);
+    map.put("incr", NodeKind.INCR_KEYWORD);
+    map.put("to", NodeKind.TO_KEYWORD);
+    map.put("while", NodeKind.WHILE_KEYWORD);
     all = map;
   }
 
@@ -38,7 +38,7 @@ public class Keyword implements Node {
    * @return Kind of node.
    */
   @Override
-  public Nodes getKind() {
+  public NodeKind getKind() {
     return all.get(getName());
   }
 }

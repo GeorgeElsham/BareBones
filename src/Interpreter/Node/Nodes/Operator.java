@@ -1,16 +1,16 @@
 package Interpreter.Node.Nodes;
 
 import Interpreter.InterpreterException.UnknownOperator;
-import Interpreter.Node.Node;
+import Interpreter.Node.*;
 import java.util.HashMap;
 
 public class Operator implements Node {
-  private static final HashMap<String, Nodes> all;
+  private static final HashMap<String, NodeKind> all;
   private final String name;
 
   static {
-    HashMap<String, Nodes> map = new HashMap<>();
-    map.put("not", Nodes.NOT_OPERATOR);
+    HashMap<String, NodeKind> map = new HashMap<>();
+    map.put("not", NodeKind.NOT_OPERATOR);
     all = map;
   }
 
@@ -31,7 +31,7 @@ public class Operator implements Node {
    * @return Kind of node.
    */
   @Override
-  public Nodes getKind() {
+  public NodeKind getKind() {
     return all.get(getName());
   }
 }

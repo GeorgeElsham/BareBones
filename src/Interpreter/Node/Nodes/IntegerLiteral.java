@@ -1,6 +1,6 @@
 package Interpreter.Node.Nodes;
 
-import Interpreter.Node.Node;
+import Interpreter.Node.*;
 
 public class IntegerLiteral implements Node {
   private final long value;
@@ -19,7 +19,7 @@ public class IntegerLiteral implements Node {
    * @return Kind of node.
    */
   @Override
-  public Nodes getKind() {
-    return Nodes.INTEGER_LITERAL;
+  public NodeKind getKind() {
+    return NodeKind.INTEGER_LITERAL;
   }
 }

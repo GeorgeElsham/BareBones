@@ -1,6 +1,6 @@
 package Interpreter.Node.Nodes;
 
-import Interpreter.Node.Node;
+import Interpreter.Node.*;
 
 public class IntegerIdentifier implements Node {
   private final String name;
@@ -19,7 +19,7 @@ public class IntegerIdentifier implements Node {
    * @return Kind of node.
    */
   @Override
-  public Nodes getKind() {
-    return Nodes.INTEGER_IDENTIFIER;
+  public NodeKind getKind() {
+    return NodeKind.INTEGER_IDENTIFIER;
   }
 }
