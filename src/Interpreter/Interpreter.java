@@ -1,16 +1,20 @@
 package Interpreter;
 
 import Interpreter.InterpreterException.*;
-import Interpreter.Node.Node;
+import Interpreter.Node.*;
 import Interpreter.Node.Nodes.*;
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class Interpreter {
   public void execute(String code) {
     final String cleaned = cleanUpCode(code);
     System.out.println(cleaned);
+
     final List<Node> tokens = tokenizer(cleaned);
     System.out.println(Arrays.toString(tokens.stream().map(x -> x == null ? "null" : x.getKind()).toArray()));
+
+    passesSyntacticAnalysis(tokens);
   }
 
   private String cleanUpCode(String code) {
@@ -60,5 +64,49 @@ public class Interpreter {
         }
       }
     }
+  }
+
+  private boolean passesSyntacticAnalysis(List<Node> tokens) {
+    try {
+      final int endIndex = validateSyntax(tokens);
+      System.out.println("final index: " + endIndex);
+    } catch (InvalidSyntax invalidSyntax) {
+      invalidSyntax.printStackTrace();
+    }
+
+    return false;
+  }
+
+  private int validateSyntax(List<Node> tokens) throws InvalidSyntax {
+    int startOffset = 0;
+
+    while (startOffset < tokens.size()) {
+      final int finalStartOffset = startOffset;
+      final int syntaxIndex =
+          IntStream.range(0, Syntax.all.length)
+              .filter(x -> Syntax.all[x][0] == tokens.get(finalStartOffset).getKind())
+              .findFirst()
+              .getAsInt();
+
+      for (int i = 0; i < Syntax.all[syntaxIndex].length; i++) {
+        final Node token = tokens.get(i + startOffset);
+        final NodeKind tokenKind = token.getKind();
+        final NodeKind expectedTokenKind = Syntax.all[syntaxIndex][i];
+
+        if (tokenKind == NodeKind.END_KEYWORD) {
+          return i;
+        } else if (expectedTokenKind == NodeKind.BLOCK) {
+          final int endIndex = validateSyntax(tokens.subList(i + startOffset, tokens.size())) + i + startOffset;
+          i = endIndex;
+          continue;
+        } else if (tokenKind != expectedTokenKind) {
+          throw new InvalidSyntax(startOffset + i, tokenKind, expectedTokenKind);
+        }
+      }
+
+      startOffset += Syntax.all[syntaxIndex].length;
+    }
+
+    return tokens.size();
   }
 }
