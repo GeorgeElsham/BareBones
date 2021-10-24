@@ -1,7 +1,5 @@
 package Interpreter;
 
-import Interpreter.Node.NodeKind;
-
 public abstract class InterpreterException {
   private static abstract class Reason extends Exception {}
 
@@ -12,21 +10,22 @@ public abstract class InterpreterException {
 
   public static class InvalidSyntax extends Reason {
     private final int tokenIndex;
-    private final NodeKind tokenKind;
-    private final NodeKind expectedTokenKind;
+    private final String message;
 
-    public InvalidSyntax(int tokenIndex, NodeKind tokenKind, NodeKind expectedTokenKind) {
+    public InvalidSyntax(int tokenIndex, String message) {
       this.tokenIndex = tokenIndex;
-      this.tokenKind = tokenKind;
-      this.expectedTokenKind = expectedTokenKind;
+      this.message = message;
+    }
+
+    public InvalidSyntax offsetTokenIndex(int distance) {
+      return new InvalidSyntax(tokenIndex + distance, message);
     }
 
     @Override
     public String toString() {
       return "InvalidSyntax{" +
           "tokenIndex=" + tokenIndex +
-          ", tokenKind=" + tokenKind +
-          ", expectedTokenKind=" + expectedTokenKind +
+          ", message='" + message + '\'' +
           '}';
     }
   }

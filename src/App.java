@@ -8,14 +8,12 @@ public class App {
 
   private void run() {
     final Interpreter interpreter = new Interpreter();
-    final String code =
-        "clear X;\n"
-            + "incr X;\n"
-            + "incr X;\n"
-            + "incr X;\n"
-            + "while X not 0 do;\n"
-            + "   decr X;\n"
-            + "end;";
-    interpreter.execute(code);
+
+    final String code = FileHandler.readFile("examples/counter.bb");
+    if (code != null) {
+      interpreter.execute(code);
+    } else {
+      System.out.println("Code not found");
+    }
   }
 }

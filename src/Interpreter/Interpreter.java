@@ -82,29 +82,58 @@ public class Interpreter {
 
     while (startOffset < tokens.size()) {
       final int finalStartOffset = startOffset;
+      final NodeKind search = tokens.get(finalStartOffset).getKind();
+
+      if (search == NodeKind.END_KEYWORD) {
+        return startOffset;
+      }
+
       final int syntaxIndex =
           IntStream.range(0, Syntax.all.length)
-              .filter(x -> Syntax.all[x][0] == tokens.get(finalStartOffset).getKind())
+              .filter(x -> Syntax.all[x][0] == search)
               .findFirst()
-              .getAsInt();
+              .orElseThrow(() -> {
+                final String msg = "Failed to find syntax starting with '%s'.";
+                final String formattedMsg = String.format(msg, search);
+                return new InvalidSyntax(finalStartOffset, formattedMsg);
+              });
 
-      for (int i = 0; i < Syntax.all[syntaxIndex].length; i++) {
-        final Node token = tokens.get(i + startOffset);
+      final int originalLoopEndOffset = startOffset + Syntax.all[syntaxIndex].length;
+      int sizeOffset = 0;
+
+      iLoop: for (int i = 0; i < Syntax.all[syntaxIndex].length; i++) {
+        final int tokenIndex = i + startOffset + sizeOffset;
+        final Node token = tokens.get(tokenIndex);
         final NodeKind tokenKind = token.getKind();
         final NodeKind expectedTokenKind = Syntax.all[syntaxIndex][i];
 
-        if (tokenKind == NodeKind.END_KEYWORD) {
-          return i;
-        } else if (expectedTokenKind == NodeKind.BLOCK) {
-          final int endIndex = validateSyntax(tokens.subList(i + startOffset, tokens.size())) + i + startOffset;
-          i = endIndex;
-          continue;
+        if (expectedTokenKind == NodeKind.BLOCK) {
+          try {
+            final int blockLength = validateSyntax(tokens.subList(tokenIndex, tokens.size()));
+            sizeOffset += blockLength - 1;
+          } catch (InvalidSyntax invalidSyntax) {
+            throw invalidSyntax.offsetTokenIndex(tokenIndex);
+          }
+        } else if (expectedTokenKind == NodeKind.BOOLEAN_EXPRESSION) {
+          final NodeKind nextExpectedTokenKind = Syntax.all[syntaxIndex][i + 1];
+
+          for (int j = 1; tokenIndex + j < tokens.size(); j++) {
+            if (tokens.get(tokenIndex + j).getKind() == nextExpectedTokenKind) {
+              sizeOffset += j - 1;
+              continue iLoop;
+            }
+          }
+
+          final String msg = "No boolean expression end found.";
+          throw new InvalidSyntax(tokenIndex, msg);
         } else if (tokenKind != expectedTokenKind) {
-          throw new InvalidSyntax(startOffset + i, tokenKind, expectedTokenKind);
+          final String msg = "Found '%s', expected '%s'.";
+          final String formattedMsg = String.format(msg, tokenKind, expectedTokenKind);
+          throw new InvalidSyntax(tokenIndex, formattedMsg);
         }
       }
 
-      startOffset += Syntax.all[syntaxIndex].length;
+      startOffset = originalLoopEndOffset + sizeOffset;
     }
 
     return tokens.size();
