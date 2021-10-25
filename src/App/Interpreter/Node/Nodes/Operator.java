@@ -6,12 +6,13 @@ import App.Interpreter.Node.Protocols.Equatable;
 import java.util.HashMap;
 
 public class Operator implements Node {
-  private static final HashMap<String, OperatorElement<?, ?, ?>> all;
+  private static final HashMap<String, OperatorElement> all;
   private final String name;
 
   static {
-    HashMap<String, OperatorElement<?, ?, ?>> map = new HashMap<>();
-    map.put("not", new OperatorElement<>(NodeKind.NOT_OPERATOR, OperatorPresence.NOT, new NotOperator<>()));
+    HashMap<String, OperatorElement> map = new HashMap<>();
+    map.put("not", new OperatorElement(NodeKind.NOT_EQUAL_OPERATOR, OperatorPresence.NOT_EQUAL, new NotEqualOperator<>()));
+    map.put("!", new OperatorElement(NodeKind.NOT_OPERATOR, OperatorPresence.NOT, new NotOperator<>()));
     all = map;
   }
 
@@ -38,12 +39,12 @@ public class Operator implements Node {
 }
 
 
-class OperatorElement<Left, Right, Output> {
+class OperatorElement {
   public final NodeKind nodeKind;
   public final OperatorPresence presence;
-  public final GenericOperator<Left, Right, Output> operator;
+  public final AnyOperator operator;
 
-  OperatorElement(NodeKind nodeKind, OperatorPresence presence, GenericOperator<Left, Right, Output> operator) {
+  OperatorElement(NodeKind nodeKind, OperatorPresence presence, AnyOperator operator) {
     this.nodeKind = nodeKind;
     this.presence = presence;
     this.operator = operator;
@@ -52,7 +53,8 @@ class OperatorElement<Left, Right, Output> {
 
 
 enum OperatorPresence {
-  NOT(1);
+  NOT_EQUAL(1),
+  NOT(2);
 
   private final int priority;
 
@@ -66,7 +68,19 @@ enum OperatorPresence {
 }
 
 
-abstract class GenericOperator<Left, Right, Output> {
+interface AnyOperator {};
+
+abstract class PrefixOperator<Right, Output> implements AnyOperator {
+  /**
+   * Calculates output from the given input.
+   *
+   * @param right Value to right of operator.
+   * @return Output result of calculation.
+   */
+  public abstract Output calculate(Right right);
+}
+
+abstract class InfixOperator<Left, Right, Output> implements AnyOperator {
   /**
    * Calculates output from the given input.
    *
@@ -77,7 +91,21 @@ abstract class GenericOperator<Left, Right, Output> {
   public abstract Output calculate(Left left, Right right);
 }
 
-class NotOperator<Value extends Equatable<?>> extends GenericOperator<Value, Value, Boolean> {
+
+class NotOperator<Value extends Equatable<?>> extends PrefixOperator<Boolean, Boolean> {
+  /**
+   * Calculates output from the given input.
+   *
+   * @param right Value to right of operator.
+   * @return Output result of calculation.
+   */
+  @Override
+  public Boolean calculate(Boolean right) {
+    return !right;
+  }
+}
+
+class NotEqualOperator<Value extends Equatable<?>> extends InfixOperator<Value, Value, Boolean> {
   /**
    * Calculates output from the given input.
    *
