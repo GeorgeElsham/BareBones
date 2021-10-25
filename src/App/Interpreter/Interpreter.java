@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class Interpreter {
+  private final Execution execution = new Execution();
+
   public void execute(String code) {
     final String cleaned = cleanUpCode(code);
     System.out.println(cleaned);
@@ -27,7 +29,8 @@ public class Interpreter {
   private List<Node> tokenizer(String code) {
     final String[] parts = code.split(" ");
     final List<String> partsList = new ArrayList<>(Arrays.asList(parts));
-    final List<Node> tokens = partsList.stream().map(CreateNode::from).toList();
+    final CreateNode createNode = new CreateNode(execution);
+    final List<Node> tokens = partsList.stream().map(createNode::from).toList();
 
     System.out.println(Arrays.toString(parts));
     return tokens;
