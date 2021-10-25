@@ -74,7 +74,7 @@ abstract class GenericOperator<Left, Right, Output> {
    * @param right Value to right of operator.
    * @return Output result of calculation.
    */
-  abstract public Output calculate(Left left, Right right);
+  public abstract Output calculate(Left left, Right right);
 }
 
 class NotOperator<Value extends Equatable<?>> extends GenericOperator<Value, Value, Boolean> {
