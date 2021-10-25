@@ -15,7 +15,12 @@ public class Interpreter {
     final List<Node> tokens = tokenizer(cleaned);
     System.out.println(Arrays.toString(tokens.stream().map(x -> x == null ? "null" : x.getKind()).toArray()));
 
-    passesSyntacticAnalysis(tokens);
+    try {
+      final int endIndex = syntacticAnalysis(tokens);
+      System.out.println("final index: " + endIndex);
+    } catch (InvalidSyntax invalidSyntax) {
+      invalidSyntax.printStackTrace();
+    }
   }
 
   private String cleanUpCode(String code) {
@@ -36,18 +41,7 @@ public class Interpreter {
     return tokens;
   }
 
-  private boolean passesSyntacticAnalysis(List<Node> tokens) {
-    try {
-      final int endIndex = validateSyntax(tokens);
-      System.out.println("final index: " + endIndex);
-    } catch (InvalidSyntax invalidSyntax) {
-      invalidSyntax.printStackTrace();
-    }
-
-    return false;
-  }
-
-  private int validateSyntax(List<Node> tokens) throws InvalidSyntax {
+  private int syntacticAnalysis(List<Node> tokens) throws InvalidSyntax {
     int startOffset = 0;
 
     while (startOffset < tokens.size()) {
@@ -73,13 +67,17 @@ public class Interpreter {
 
       iLoop: for (int i = 0; i < Syntax.all[syntaxIndex].length; i++) {
         final int tokenIndex = i + startOffset + sizeOffset;
+        if (tokenIndex >= tokens.size()) {
+          throw new InvalidSyntax(startOffset, "Missing end of block.");
+        }
+
         final Node token = tokens.get(tokenIndex);
         final NodeKind tokenKind = token.getKind();
         final NodeKind expectedTokenKind = Syntax.all[syntaxIndex][i];
 
         if (expectedTokenKind == NodeKind.BLOCK) {
           try {
-            final int blockLength = validateSyntax(tokens.subList(tokenIndex, tokens.size()));
+            final int blockLength = syntacticAnalysis(tokens.subList(tokenIndex, tokens.size()));
             sizeOffset += blockLength - 1;
           } catch (InvalidSyntax invalidSyntax) {
             throw invalidSyntax.offsetTokenIndex(tokenIndex);
