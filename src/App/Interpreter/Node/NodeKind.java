@@ -14,5 +14,9 @@ public enum NodeKind {
   LINE_TERMINATOR,
   NOT_OPERATOR,
   TO_KEYWORD,
-  WHILE_KEYWORD,
+  WHILE_KEYWORD;
+
+  public boolean isExpression() {
+    return this == BOOLEAN_EXPRESSION;
+  }
 }

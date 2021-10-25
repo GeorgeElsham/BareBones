@@ -81,7 +81,7 @@ public class Interpreter {
           } catch (InvalidSyntax invalidSyntax) {
             throw invalidSyntax.offsetTokenIndex(tokenIndex);
           }
-        } else if (expectedTokenKind == NodeKind.BOOLEAN_EXPRESSION) {
+        } else if (expectedTokenKind.isExpression()) {
           final NodeKind nextExpectedTokenKind = Syntax.all[syntaxIndex][i + 1];
 
           for (int j = 1; tokenIndex + j < tokens.size(); j++) {
