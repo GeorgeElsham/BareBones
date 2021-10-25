@@ -34,24 +34,18 @@ public class CreateNode {
   }
 
   private static IntegerIdentifier createIntegerIdentifier(String string) {
-    try {
-      if (!string.matches("^[A-Za-z][A-Za-z0-9]*$")) {
-        throw new InvalidIdentifier();
-      }
+    if (string.matches("^[A-Za-z][A-Za-z0-9]*$")) {
       return new IntegerIdentifier(string);
-    } catch (InvalidIdentifier invalidIdentifier) {
+    } else {
       return null;
     }
   }
 
   private static IntegerLiteral createIntegerLiteral(String string) {
-    try {
-      if (!string.matches("\\d+")) {
-        throw new InvalidInteger();
-      }
-      final long integer = Long.parseLong(string);
+    if (string.matches("\\d+")) {
+      final int integer = Integer.parseInt(string);
       return new IntegerLiteral(integer);
-    } catch (InvalidInteger invalidInteger) {
+    } else {
       return null;
     }
   }

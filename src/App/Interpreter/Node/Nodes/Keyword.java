@@ -23,7 +23,7 @@ public class Keyword implements Node {
 
   public Keyword(String name) throws UnknownKeyword {
     if (all.get(name) == null) {
-      throw new UnknownKeyword();
+      throw new UnknownKeyword(name);
     }
     this.name = name;
   }

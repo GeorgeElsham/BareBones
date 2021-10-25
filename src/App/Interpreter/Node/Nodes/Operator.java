@@ -16,7 +16,7 @@ public class Operator implements Node {
 
   public Operator(String name) throws UnknownOperator {
     if (all.get(name) == null) {
-      throw new UnknownOperator();
+      throw new UnknownOperator(name);
     }
     this.name = name;
   }

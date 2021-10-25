@@ -3,13 +3,13 @@ package App.Interpreter.Node.Nodes;
 import App.Interpreter.Node.*;
 
 public class IntegerLiteral implements Node {
-  private final long value;
+  private final int value;
 
-  public IntegerLiteral(long value) {
+  public IntegerLiteral(int value) {
     this.value = value;
   }
 
-  public long getValue() {
+  public int getValue() {
     return value;
   }
 
