@@ -91,8 +91,9 @@ public class Interpreter {
             }
           }
 
-          final String msg = "No boolean expression end found.";
-          throw new InvalidSyntax(tokenIndex, msg);
+          final String msg = "No '%s' expression end found.";
+          final String formattedMsg = String.format(msg, expectedTokenKind);
+          throw new InvalidSyntax(tokenIndex, formattedMsg);
         } else if (tokenKind != expectedTokenKind) {
           final String msg = "Found '%s', expected '%s'.";
           final String formattedMsg = String.format(msg, tokenKind, expectedTokenKind);
