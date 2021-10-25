@@ -1,7 +1,7 @@
-package Interpreter.Node.Nodes;
+package App.Interpreter.Node.Nodes;
 
-import Interpreter.InterpreterException.UnknownOperator;
-import Interpreter.Node.*;
+import App.Interpreter.InterpreterException.UnknownOperator;
+import App.Interpreter.Node.*;
 import java.util.HashMap;
 
 public class Operator implements Node {

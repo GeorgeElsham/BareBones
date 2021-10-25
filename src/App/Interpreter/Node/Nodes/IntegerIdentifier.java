@@ -1,6 +1,6 @@
-package Interpreter.Node.Nodes;
+package App.Interpreter.Node.Nodes;
 
-import Interpreter.Node.*;
+import App.Interpreter.Node.*;
 
 public class IntegerIdentifier implements Node {
   private final String name;

@@ -1,8 +1,7 @@
-package Interpreter;
+package App.Interpreter;
 
-import Interpreter.InterpreterException.*;
-import Interpreter.Node.*;
-import Interpreter.Node.Nodes.*;
+import App.Interpreter.InterpreterException.*;
+import App.Interpreter.Node.*;
 import java.util.*;
 import java.util.stream.IntStream;
 

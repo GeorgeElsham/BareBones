@@ -1,7 +1,7 @@
-package Interpreter.Node.Nodes;
+package App.Interpreter.Node.Nodes;
 
-import Interpreter.InterpreterException.UnknownKeyword;
-import Interpreter.Node.*;
+import App.Interpreter.InterpreterException.UnknownKeyword;
+import App.Interpreter.Node.*;
 import java.util.HashMap;
 
 public class Keyword implements Node {

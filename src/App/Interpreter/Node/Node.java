@@ -1,4 +1,4 @@
-package Interpreter.Node;
+package App.Interpreter.Node;
 
 public interface Node {
   /**

@@ -1,6 +1,6 @@
-package Interpreter.Node.Nodes;
+package App.Interpreter.Node.Nodes;
 
-import Interpreter.Node.*;
+import App.Interpreter.Node.*;
 
 public class IntegerLiteral implements Node {
   private final long value;

@@ -1,4 +1,4 @@
-package Interpreter.Node;
+package App.Interpreter.Node;
 
 public abstract class Syntax {
   public final static NodeKind[][] all = {

@@ -1,4 +1,4 @@
-package Interpreter;
+package App.Interpreter;
 
 public abstract class InterpreterException {
   private static abstract class Reason extends Exception {}

@@ -1,4 +1,6 @@
-import Interpreter.Interpreter;
+package App;
+
+import App.Interpreter.Interpreter;
 
 public class App {
   public static void main(String[] args) {

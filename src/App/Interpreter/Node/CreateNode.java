@@ -1,7 +1,7 @@
-package Interpreter.Node;
+package App.Interpreter.Node;
 
-import Interpreter.InterpreterException.*;
-import Interpreter.Node.Nodes.*;
+import App.Interpreter.InterpreterException.*;
+import App.Interpreter.Node.Nodes.*;
 import java.util.Objects;
 
 public class CreateNode {
