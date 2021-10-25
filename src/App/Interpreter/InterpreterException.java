@@ -1,7 +1,25 @@
 package App.Interpreter;
 
+import App.Interpreter.Node.Node;
+import java.util.Arrays;
+
 public abstract class InterpreterException {
   private static abstract class Reason extends Exception {}
+
+  public static class InvalidBooleanExpression extends Reason {
+    private final Node[] nodes;
+
+    public InvalidBooleanExpression(Node[] nodes) {
+      this.nodes = nodes;
+    }
+
+    @Override
+    public String toString() {
+      return "InvalidBooleanExpression{" +
+          "nodes=" + Arrays.toString(nodes) +
+          '}';
+    }
+  }
 
   public static class InvalidInteger extends Reason {
     private final int value;

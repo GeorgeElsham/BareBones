@@ -7,10 +7,10 @@ public interface Equatable<Value> {
    *
    * @return Value to check for equality.
    */
-  Value getValue();
+  Value getEquatableValue();
 
   static <Value extends Equatable<?>> boolean isEqual(Value left, Value right) {
-    return left.getValue().equals(right.getValue());
+    return left.getEquatableValue().equals(right.getEquatableValue());
   }
 
   static <Value extends Equatable<?>> boolean isNotEqual(Value left, Value right) {

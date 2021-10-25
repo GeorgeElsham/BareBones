@@ -27,6 +27,10 @@ public class Operator implements Node {
     return name;
   }
 
+  public AnyOperator getOperator() {
+    return all.get(name).operator;
+  }
+
   /**
    * Gets the kind of node this is.
    *

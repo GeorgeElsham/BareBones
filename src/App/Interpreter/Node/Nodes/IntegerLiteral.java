@@ -1,9 +1,9 @@
 package App.Interpreter.Node.Nodes;
 
 import App.Interpreter.Node.*;
-import App.Interpreter.Node.Protocols.Equatable;
+import App.Interpreter.Node.Protocols.*;
 
-public class IntegerLiteral implements Node, Equatable<Integer> {
+public class IntegerLiteral implements Node, Equatable<Integer>, IntegerValue {
   private final int value;
 
   public IntegerLiteral(int value) {
@@ -26,7 +26,17 @@ public class IntegerLiteral implements Node, Equatable<Integer> {
    * @return Value to check for equality.
    */
   @Override
-  public Integer getValue() {
+  public Integer getEquatableValue() {
+    return value;
+  }
+
+  /**
+   * Get integer value.
+   *
+   * @return Integer value.
+   */
+  @Override
+  public int getValue() {
     return value;
   }
 }

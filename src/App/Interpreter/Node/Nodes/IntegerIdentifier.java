@@ -1,9 +1,9 @@
 package App.Interpreter.Node.Nodes;
 
 import App.Interpreter.Node.*;
-import App.Interpreter.Node.Protocols.Equatable;
+import App.Interpreter.Node.Protocols.*;
 
-public class IntegerIdentifier implements Node, Equatable<Integer> {
+public class IntegerIdentifier implements Node, Equatable<Integer>, IntegerValue {
   private final String name;
   private final Execution execution;
 
@@ -32,7 +32,17 @@ public class IntegerIdentifier implements Node, Equatable<Integer> {
    * @return Value to check for equality.
    */
   @Override
-  public Integer getValue() {
+  public Integer getEquatableValue() {
+    return execution.getVariable(name);
+  }
+
+  /**
+   * Get integer value.
+   *
+   * @return Integer value.
+   */
+  @Override
+  public int getValue() {
     return execution.getVariable(name);
   }
 }
