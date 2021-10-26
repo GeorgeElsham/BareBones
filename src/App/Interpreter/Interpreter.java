@@ -71,7 +71,7 @@ public class Interpreter {
               .findFirst()
               .orElseThrow(() -> {
                 final String msg = "Failed to find syntax starting with '%s'";
-                final String formattedMsg = String.format(msg, search);
+                final String formattedMsg = String.format(msg, search.readableName());
                 return new InvalidSyntax(finalStartOffset, formattedMsg);
               });
 
@@ -115,13 +115,13 @@ public class Interpreter {
           }
 
           final String msg = "No '%s' expression end found";
-          final String formattedMsg = String.format(msg, expectedTokenKind);
+          final String formattedMsg = String.format(msg, expectedTokenKind.readableName());
           throw new InvalidSyntax(tokenIndex, formattedMsg);
         } else if (tokenKind == expectedTokenKind) {
           currentNodes.add(token);
         } else {
           final String msg = "Found '%s', expected '%s'";
-          final String formattedMsg = String.format(msg, tokenKind, expectedTokenKind);
+          final String formattedMsg = String.format(msg, tokenKind.readableName(), expectedTokenKind.readableName());
           throw new InvalidSyntax(tokenIndex, formattedMsg);
         }
       }

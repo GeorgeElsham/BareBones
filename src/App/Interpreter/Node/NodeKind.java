@@ -20,4 +20,9 @@ public enum NodeKind {
   public boolean isExpression() {
     return this == BOOLEAN_EXPRESSION;
   }
+
+  public String readableName() {
+    final String spaced = name().replace("_", " ");
+    return spaced.toLowerCase();
+  }
 }
