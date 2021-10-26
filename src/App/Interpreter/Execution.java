@@ -11,7 +11,7 @@ public class Execution {
     try {
       setVariable(name, 0);
     } catch (InvalidInteger invalidInteger) {
-      System.exit(ExitCode.IMPOSSIBLE_STATE.code);
+      System.exit(ExitCode.IMPOSSIBLE_STATE);
     }
   }
 
@@ -35,7 +35,7 @@ public class Execution {
     try {
       setVariable(name, currentValue + 1);
     } catch (InvalidInteger invalidInteger) {
-      System.exit(ExitCode.IMPOSSIBLE_STATE.code);
+      System.exit(ExitCode.IMPOSSIBLE_STATE);
     }
   }
 

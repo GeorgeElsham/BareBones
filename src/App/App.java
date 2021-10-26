@@ -16,7 +16,7 @@ public class App {
       interpreter.execute(code);
     } else {
       System.err.println("Missing program");
-      System.exit(ExitCode.MISSING_PROGRAM.code);
+      System.exit(ExitCode.MISSING_PROGRAM);
     }
   }
 }

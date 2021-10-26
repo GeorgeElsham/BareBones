@@ -33,7 +33,7 @@ public abstract class Syntax {
             try {
               identifierRight.set(identifierLeft.getValue());
             } catch (InvalidInteger invalidInteger) {
-              System.exit(ExitCode.IMPOSSIBLE_STATE.code);
+              System.exit(ExitCode.IMPOSSIBLE_STATE);
             }
           }
       ),
