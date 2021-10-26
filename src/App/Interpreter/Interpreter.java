@@ -35,18 +35,14 @@ public class Interpreter {
     final String removedComments = code.replaceAll("^ *#.*", "");
     final String removedNewLines = removedComments.replaceAll(" *\\n *", "");
     final String removedSemicolonSpaces = removedNewLines.replaceAll(" *; *", " ; ");
-    final String removedInlineSpaces = removedSemicolonSpaces.replaceAll(" {2,}", " ");
-    return removedInlineSpaces;
+    return removedSemicolonSpaces.replaceAll(" {2,}", " ");
   }
 
   private List<Node> tokenizer(String code) {
     final String[] parts = code.split(" ");
     final List<String> partsList = new ArrayList<>(Arrays.asList(parts));
     final CreateNode createNode = new CreateNode(execution);
-    final List<Node> tokens = partsList.stream().map(createNode::from).toList();
-
-    System.out.println(Arrays.toString(parts));
-    return tokens;
+    return partsList.stream().map(createNode::from).toList();
   }
 
   private SyntacticAnalysisResult syntacticAnalysis(List<Node> tokens) throws InvalidSyntax {
@@ -85,8 +81,8 @@ public class Interpreter {
         if (expectedTokenKind == NodeKind.BLOCK) {
           try {
             final SyntacticAnalysisResult result = syntacticAnalysis(tokens.subList(tokenIndex, tokens.size()));
-            currentParseTrees.add(new ParseTree(syntaxIndex, currentNodes.toArray(Node[]::new), result.parseTrees));
-            sizeOffset += result.blockLength - 1;
+            currentParseTrees.add(new ParseTree(syntaxIndex, currentNodes.toArray(Node[]::new), result.getParseTrees()));
+            sizeOffset += result.getBlockLength() - 1;
           } catch (InvalidSyntax invalidSyntax) {
             throw invalidSyntax.offsetTokenIndex(tokenIndex);
           }
@@ -134,13 +130,13 @@ public class Interpreter {
 }
 
 
-class SyntacticAnalysisResult {
-  public final int blockLength;
-  public final ParseTree[] parseTrees;
+record SyntacticAnalysisResult(int blockLength, ParseTree[] parseTrees) {
+  public int getBlockLength() {
+    return blockLength;
+  }
 
-  public SyntacticAnalysisResult(int blockLength, ParseTree[] parseTrees) {
-    this.blockLength = blockLength;
-    this.parseTrees = parseTrees;
+  public ParseTree[] getParseTrees() {
+    return parseTrees;
   }
 
   public void execute() throws InvalidInteger {
