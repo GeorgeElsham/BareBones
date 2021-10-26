@@ -5,19 +5,9 @@ import App.Interpreter.Node.Node;
 import App.Interpreter.Syntax.Syntax;
 import java.util.Arrays;
 
-public class ParseTree {
-  private final int syntaxIndex;
-  private final Node[] nodes;
-  private final ParseTree[] subtrees;
-
-  public ParseTree(int syntaxIndex, Node[] nodes, ParseTree[] subtrees) {
-    this.syntaxIndex = syntaxIndex;
-    this.nodes = nodes;
-    this.subtrees = subtrees;
-  }
-
+public record ParseTree(int syntaxIndex, Node[] nodes, ParseTree[] parseTrees) {
   public void run() throws InvalidInteger {
-    Syntax.all[syntaxIndex].run(nodes, subtrees);
+    Syntax.all[syntaxIndex].run(nodes, parseTrees);
   }
 
   @Override
@@ -25,7 +15,7 @@ public class ParseTree {
     return "ParseTree{" +
         "syntaxIndex=" + syntaxIndex +
         ", nodes=" + Arrays.toString(nodes) +
-        ", subtrees=" + Arrays.toString(subtrees) +
+        ", parseTrees=" + Arrays.toString(parseTrees) +
         '}';
   }
 }
