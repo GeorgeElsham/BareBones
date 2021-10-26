@@ -70,7 +70,7 @@ public class Interpreter {
               .filter(x -> Syntax.all[x].getNodeKind(0) == search)
               .findFirst()
               .orElseThrow(() -> {
-                final String msg = "Failed to find syntax starting with '%s'.";
+                final String msg = "Failed to find syntax starting with '%s'";
                 final String formattedMsg = String.format(msg, search);
                 return new InvalidSyntax(finalStartOffset, formattedMsg);
               });
@@ -83,7 +83,7 @@ public class Interpreter {
       iLoop: for (int i = 0; i < Syntax.all[syntaxIndex].numberOfParts(); i++) {
         final int tokenIndex = i + startOffset + sizeOffset;
         if (tokenIndex >= tokens.size()) {
-          throw new InvalidSyntax(startOffset, "Missing end of block.");
+          throw new InvalidSyntax(startOffset, "Missing end of block");
         }
 
         final Node token = tokens.get(tokenIndex);
@@ -109,18 +109,18 @@ public class Interpreter {
                 sizeOffset += j - 1;
                 continue iLoop;
               } catch (InvalidBooleanExpression invalidBooleanExpression) {
-                throw new InvalidSyntax(tokenIndex, "Invalid boolean expression.");
+                throw new InvalidSyntax(tokenIndex, "Invalid boolean expression");
               }
             }
           }
 
-          final String msg = "No '%s' expression end found.";
+          final String msg = "No '%s' expression end found";
           final String formattedMsg = String.format(msg, expectedTokenKind);
           throw new InvalidSyntax(tokenIndex, formattedMsg);
         } else if (tokenKind == expectedTokenKind) {
           currentNodes.add(token);
         } else {
-          final String msg = "Found '%s', expected '%s'.";
+          final String msg = "Found '%s', expected '%s'";
           final String formattedMsg = String.format(msg, tokenKind, expectedTokenKind);
           throw new InvalidSyntax(tokenIndex, formattedMsg);
         }
