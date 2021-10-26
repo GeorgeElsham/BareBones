@@ -15,7 +15,8 @@ public class App {
     if (code != null) {
       interpreter.execute(code);
     } else {
-      System.out.println("Code not found");
+      System.err.println("Missing program");
+      System.exit(ExitCode.MISSING_PROGRAM.code);
     }
   }
 }

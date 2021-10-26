@@ -18,7 +18,6 @@ public class FileHandler {
       scanner.close();
       return String.join("\n", lines);
     } catch (FileNotFoundException e) {
-      e.printStackTrace();
       return null;
     }
   }
