@@ -42,7 +42,7 @@ public class Execution {
   public void setVariable(String name, int value) throws InvalidInteger {
     System.out.println("Set " + name + " to " + value);
     if (value < 0) {
-      throw new InvalidInteger(value);
+      throw new InvalidInteger(name, value);
     }
     final List<Integer> currentValue = record.get(name);
 

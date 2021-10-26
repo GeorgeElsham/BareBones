@@ -22,16 +22,19 @@ public abstract class InterpreterException {
   }
 
   public static class InvalidInteger extends Reason {
+    public final String name;
     public final int value;
 
-    public InvalidInteger(int value) {
+    public InvalidInteger(String name, int value) {
+      this.name = name;
       this.value = value;
     }
 
     @Override
     public String toString() {
       return "InvalidInteger{" +
-          "value=" + value +
+          "name='" + name + '\'' +
+          ", value=" + value +
           '}';
     }
   }

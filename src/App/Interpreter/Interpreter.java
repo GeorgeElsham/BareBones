@@ -24,8 +24,8 @@ public class Interpreter {
       System.err.println(formattedMsg);
       System.exit(ExitCode.PROGRAM_ERROR.code);
     } catch (InvalidInteger invalidInteger) {
-      final String msg = "Invalid integer created: '%d'.";
-      final String formattedMsg = String.format(msg, invalidInteger.value);
+      final String msg = "Invalid integer '%d' in '%s'";
+      final String formattedMsg = String.format(msg, invalidInteger.value, invalidInteger.name);
       System.err.println(formattedMsg);
       System.exit(ExitCode.PROGRAM_ERROR.code);
     }
