@@ -58,6 +58,21 @@ public abstract class InterpreterException {
     }
   }
 
+  public static class UnexpectedToken extends Reason {
+    public final String token;
+
+    public UnexpectedToken(String token) {
+      this.token = token;
+    }
+
+    @Override
+    public String toString() {
+      return "UnexpectedToken{" +
+          "token='" + token + '\'' +
+          '}';
+    }
+  }
+
   public static class UnknownKeyword extends Reason {
     private final String name;
 

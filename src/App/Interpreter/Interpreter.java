@@ -41,8 +41,20 @@ public class Interpreter {
   private List<Node> tokenizer(String code) {
     final String[] parts = code.split(" ");
     final List<String> partsList = new ArrayList<>(Arrays.asList(parts));
-    final CreateNode createNode = new CreateNode(execution);
-    return partsList.stream().map(createNode::from).toList();
+    return partsList.stream().map(this::createNode).toList();
+  }
+
+  private Node createNode(String part) {
+    try {
+      final CreateNode createNode = new CreateNode(execution);
+      return createNode.from(part);
+    } catch (UnexpectedToken unexpectedToken) {
+      final String msg = "Unexpected token: '%s'";
+      final String formattedMsg = String.format(msg, unexpectedToken.token);
+      System.err.println(formattedMsg);
+      System.exit(ExitCode.PROGRAM_ERROR.code);
+      return null;
+    }
   }
 
   private SyntacticAnalysisResult syntacticAnalysis(List<Node> tokens) throws InvalidSyntax {

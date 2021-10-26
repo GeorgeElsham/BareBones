@@ -12,7 +12,7 @@ public class CreateNode {
     this.execution = execution;
   }
 
-  public Node from(String string) {
+  public Node from(String string) throws UnexpectedToken {
     final Node node = readNode(
         string,
         this::createLineTerminator,
@@ -25,8 +25,7 @@ public class CreateNode {
     if (node != null) {
       return node;
     } else {
-      System.out.println("Unknown: " + string);
-      return null;
+      throw new UnexpectedToken(string);
     }
   }
 
