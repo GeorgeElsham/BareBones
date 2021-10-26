@@ -1,5 +1,7 @@
 package App.Interpreter.Node.Nodes;
 
+import App.Interpreter.Execution;
+import App.Interpreter.InterpreterException.InvalidInteger;
 import App.Interpreter.Node.*;
 import App.Interpreter.Node.Protocols.*;
 
@@ -12,8 +14,20 @@ public class IntegerIdentifier implements Node, Equatable<Integer>, IntegerValue
     this.execution = execution;
   }
 
-  public String getName() {
-    return name;
+  public void clear() {
+    execution.clearVariable(name);
+  }
+
+  public void decrement() throws InvalidInteger {
+    execution.decrementVariable(name);
+  }
+
+  public void increment() {
+    execution.incrementVariable(name);
+  }
+
+  public void set(int value) throws InvalidInteger {
+    execution.setVariable(name, value);
   }
 
   /**

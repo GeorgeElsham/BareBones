@@ -22,7 +22,7 @@ public abstract class InterpreterException {
   }
 
   public static class InvalidInteger extends Reason {
-    private final int value;
+    public final int value;
 
     public InvalidInteger(int value) {
       this.value = value;
@@ -37,8 +37,8 @@ public abstract class InterpreterException {
   }
 
   public static class InvalidSyntax extends Reason {
-    private final int tokenIndex;
-    private final String message;
+    public final int tokenIndex;
+    public final String message;
 
     public InvalidSyntax(int tokenIndex, String message) {
       this.tokenIndex = tokenIndex;

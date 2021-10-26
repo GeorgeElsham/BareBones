@@ -1,4 +1,4 @@
-package App.Interpreter.Node;
+package App.Interpreter;
 
 import App.ExitCode;
 import App.Interpreter.InterpreterException.InvalidInteger;
@@ -23,7 +23,6 @@ public class Execution {
   public int getVariable(String name) {
     final List<Integer> value = record.get(name);
     if (value == null) {
-      clearVariable(name);
       return 0;
     } else {
       return value.get(value.size() - 1);
@@ -41,16 +40,18 @@ public class Execution {
   }
 
   public void setVariable(String name, int value) throws InvalidInteger {
+    System.out.println("Set " + name + " to " + value);
     if (value < 0) {
       throw new InvalidInteger(value);
     }
-    List<Integer> currentValue = record.get(name);
+    final List<Integer> currentValue = record.get(name);
 
     if (currentValue == null) {
       record.put(name, List.of(value));
     } else {
-      currentValue.addAll(Collections.singleton(value));
-      record.put(name, currentValue);
+      List<Integer> copy = new ArrayList<>(currentValue);
+      copy.add(value);
+      record.put(name, copy);
     }
   }
 }

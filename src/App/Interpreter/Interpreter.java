@@ -1,7 +1,10 @@
 package App.Interpreter;
 
+import App.ExitCode;
 import App.Interpreter.InterpreterException.*;
 import App.Interpreter.Node.*;
+import App.Interpreter.Node.Nodes.BooleanExpression;
+import App.Interpreter.Syntax.Syntax;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -10,16 +13,21 @@ public class Interpreter {
 
   public void execute(String code) {
     final String cleaned = cleanUpCode(code);
-    System.out.println(cleaned);
-
     final List<Node> tokens = tokenizer(cleaned);
-    System.out.println(Arrays.toString(tokens.stream().map(x -> x == null ? "null" : x.getKind()).toArray()));
 
     try {
-      final int endIndex = syntacticAnalysis(tokens);
-      System.out.println("final index: " + endIndex);
+      final SyntacticAnalysisResult result = syntacticAnalysis(tokens);
+      result.execute();
     } catch (InvalidSyntax invalidSyntax) {
-      invalidSyntax.printStackTrace();
+      final String msg = "Invalid syntax for token index '%d': %s";
+      final String formattedMsg = String.format(msg, invalidSyntax.tokenIndex, invalidSyntax.message);
+      System.err.println(formattedMsg);
+      System.exit(ExitCode.PROGRAM_ERROR.code);
+    } catch (InvalidInteger invalidInteger) {
+      final String msg = "Invalid integer created: '%d'.";
+      final String formattedMsg = String.format(msg, invalidInteger.value);
+      System.err.println(formattedMsg);
+      System.exit(ExitCode.PROGRAM_ERROR.code);
     }
   }
 
@@ -41,20 +49,17 @@ public class Interpreter {
     return tokens;
   }
 
-  private int syntacticAnalysis(List<Node> tokens) throws InvalidSyntax {
+  private SyntacticAnalysisResult syntacticAnalysis(List<Node> tokens) throws InvalidSyntax {
     int startOffset = 0;
+    List<ParseTree> parseTrees = new ArrayList<>();
 
     while (startOffset < tokens.size()) {
       final int finalStartOffset = startOffset;
       final NodeKind search = tokens.get(finalStartOffset).getKind();
 
-      if (search == NodeKind.END_KEYWORD) {
-        return startOffset;
-      }
-
       final int syntaxIndex =
           IntStream.range(0, Syntax.all.length)
-              .filter(x -> Syntax.all[x][0] == search)
+              .filter(x -> Syntax.all[x].getNodeKind(0) == search)
               .findFirst()
               .orElseThrow(() -> {
                 final String msg = "Failed to find syntax starting with '%s'.";
@@ -62,10 +67,12 @@ public class Interpreter {
                 return new InvalidSyntax(finalStartOffset, formattedMsg);
               });
 
-      final int originalLoopEndOffset = startOffset + Syntax.all[syntaxIndex].length;
+      final int originalLoopEndOffset = startOffset + Syntax.all[syntaxIndex].numberOfParts();
       int sizeOffset = 0;
+      List<Node> currentNodes = new ArrayList<>();
+      List<ParseTree> currentParseTrees = new ArrayList<>();
 
-      iLoop: for (int i = 0; i < Syntax.all[syntaxIndex].length; i++) {
+      iLoop: for (int i = 0; i < Syntax.all[syntaxIndex].numberOfParts(); i++) {
         final int tokenIndex = i + startOffset + sizeOffset;
         if (tokenIndex >= tokens.size()) {
           throw new InvalidSyntax(startOffset, "Missing end of block.");
@@ -73,29 +80,38 @@ public class Interpreter {
 
         final Node token = tokens.get(tokenIndex);
         final NodeKind tokenKind = token.getKind();
-        final NodeKind expectedTokenKind = Syntax.all[syntaxIndex][i];
+        final NodeKind expectedTokenKind = Syntax.all[syntaxIndex].getNodeKind(i);
 
         if (expectedTokenKind == NodeKind.BLOCK) {
           try {
-            final int blockLength = syntacticAnalysis(tokens.subList(tokenIndex, tokens.size()));
-            sizeOffset += blockLength - 1;
+            final SyntacticAnalysisResult result = syntacticAnalysis(tokens.subList(tokenIndex, tokens.size()));
+            currentParseTrees.add(new ParseTree(syntaxIndex, currentNodes.toArray(Node[]::new), result.parseTrees));
+            sizeOffset += result.blockLength - 1;
           } catch (InvalidSyntax invalidSyntax) {
             throw invalidSyntax.offsetTokenIndex(tokenIndex);
           }
         } else if (expectedTokenKind.isExpression()) {
-          final NodeKind nextExpectedTokenKind = Syntax.all[syntaxIndex][i + 1];
+          final NodeKind nextExpectedTokenKind = Syntax.all[syntaxIndex].getNodeKind(i + 1);
 
           for (int j = 1; tokenIndex + j < tokens.size(); j++) {
             if (tokens.get(tokenIndex + j).getKind() == nextExpectedTokenKind) {
-              sizeOffset += j - 1;
-              continue iLoop;
+              final Node[] nodes = tokens.subList(tokenIndex, tokenIndex + j).toArray(Node[]::new);
+              try {
+                currentNodes.add(new BooleanExpression(nodes));
+                sizeOffset += j - 1;
+                continue iLoop;
+              } catch (InvalidBooleanExpression invalidBooleanExpression) {
+                throw new InvalidSyntax(tokenIndex, "Invalid boolean expression.");
+              }
             }
           }
 
           final String msg = "No '%s' expression end found.";
           final String formattedMsg = String.format(msg, expectedTokenKind);
           throw new InvalidSyntax(tokenIndex, formattedMsg);
-        } else if (tokenKind != expectedTokenKind) {
+        } else if (tokenKind == expectedTokenKind) {
+          currentNodes.add(token);
+        } else {
           final String msg = "Found '%s', expected '%s'.";
           final String formattedMsg = String.format(msg, tokenKind, expectedTokenKind);
           throw new InvalidSyntax(tokenIndex, formattedMsg);
@@ -103,8 +119,33 @@ public class Interpreter {
       }
 
       startOffset = originalLoopEndOffset + sizeOffset;
+
+      final Node[] newNodes = currentNodes.toArray(Node[]::new);
+      final ParseTree[] newParseTrees = currentParseTrees.toArray(ParseTree[]::new);
+      parseTrees.add(new ParseTree(syntaxIndex, newNodes, newParseTrees));
+
+      if (startOffset < tokens.size() && tokens.get(startOffset).getKind() == NodeKind.END_KEYWORD) {
+        return new SyntacticAnalysisResult(startOffset, parseTrees.toArray(ParseTree[]::new));
+      }
     }
 
-    return tokens.size();
+    return new SyntacticAnalysisResult(tokens.size(), parseTrees.toArray(ParseTree[]::new));
+  }
+}
+
+
+class SyntacticAnalysisResult {
+  public final int blockLength;
+  public final ParseTree[] parseTrees;
+
+  public SyntacticAnalysisResult(int blockLength, ParseTree[] parseTrees) {
+    this.blockLength = blockLength;
+    this.parseTrees = parseTrees;
+  }
+
+  public void execute() throws InvalidInteger {
+    for (ParseTree parseTree : parseTrees) {
+      parseTree.run();
+    }
   }
 }
