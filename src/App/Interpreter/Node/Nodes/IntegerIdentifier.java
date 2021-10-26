@@ -5,6 +5,9 @@ import App.Interpreter.InterpreterException.InvalidInteger;
 import App.Interpreter.Node.*;
 import App.Interpreter.Node.Protocols.*;
 
+/**
+ * Represents an integer identifier.
+ */
 public class IntegerIdentifier implements Node, Equatable<Integer>, IntegerValue {
   private final String name;
   private final Execution execution;
@@ -14,18 +17,35 @@ public class IntegerIdentifier implements Node, Equatable<Integer>, IntegerValue
     this.execution = execution;
   }
 
+  /**
+   * Clear variable value.
+   */
   public void clear() {
     execution.clearVariable(name);
   }
 
+  /**
+   * Decrement variable value by 1.
+   *
+   * @throws InvalidInteger Invalid integer error if it goes negative.
+   */
   public void decrement() throws InvalidInteger {
     execution.decrementVariable(name);
   }
 
+  /**
+   * Increment variable value by 1.
+   */
   public void increment() {
     execution.incrementVariable(name);
   }
 
+  /**
+   * Set exact variable value.
+   *
+   * @param value New value.
+   * @throws InvalidInteger Invalid integer error if negative.
+   */
   public void set(int value) throws InvalidInteger {
     execution.setVariable(name, value);
   }

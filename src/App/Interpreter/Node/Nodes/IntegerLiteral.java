@@ -3,6 +3,9 @@ package App.Interpreter.Node.Nodes;
 import App.Interpreter.Node.*;
 import App.Interpreter.Node.Protocols.*;
 
+/**
+ * Represents an integer literal.
+ */
 public class IntegerLiteral implements Node, Equatable<Integer>, IntegerValue {
   private final int value;
 

@@ -4,6 +4,9 @@ import App.Interpreter.InterpreterException.InvalidBooleanExpression;
 import App.Interpreter.Node.*;
 import App.Interpreter.Node.Protocols.IntegerValue;
 
+/**
+ * Represents a boolean expression.
+ */
 public class BooleanExpression implements Node {
   private final IntegerValue left;
   private final InfixOperator<IntegerValue, IntegerValue, Boolean> operator;
@@ -27,6 +30,11 @@ public class BooleanExpression implements Node {
     }
   }
 
+  /**
+   * Evaluate value of boolean expression.
+   *
+   * @return Result of calculation.
+   */
   public boolean evaluate() {
     return operator.calculate(left, right);
   }

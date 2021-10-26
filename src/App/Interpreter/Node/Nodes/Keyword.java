@@ -4,6 +4,9 @@ import App.Interpreter.InterpreterException.UnknownKeyword;
 import App.Interpreter.Node.*;
 import java.util.HashMap;
 
+/**
+ * Represents a keyword.
+ */
 public class Keyword implements Node {
   private static final HashMap<String, NodeKind> all;
   private final String name;
@@ -28,6 +31,11 @@ public class Keyword implements Node {
     this.name = name;
   }
 
+  /**
+   * Gets keyword name.
+   *
+   * @return Name of keyword in code.
+   */
   public String getName() {
     return name;
   }

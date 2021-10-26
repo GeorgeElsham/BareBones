@@ -5,14 +5,17 @@ import App.Interpreter.Node.*;
 import App.Interpreter.Node.Protocols.Equatable;
 import java.util.HashMap;
 
+/**
+ * Represents an operator.
+ */
 public class Operator implements Node {
   private static final HashMap<String, OperatorElement> all;
   private final String name;
 
   static {
     HashMap<String, OperatorElement> map = new HashMap<>();
-    map.put("not", new OperatorElement(NodeKind.NOT_EQUAL_OPERATOR, OperatorPresence.NOT_EQUAL, new NotEqualOperator<>()));
-    map.put("!", new OperatorElement(NodeKind.NOT_OPERATOR, OperatorPresence.NOT, new NotOperator<>()));
+    map.put("not", new OperatorElement(NodeKind.NOT_EQUAL_OPERATOR, OperatorPrecedence.NOT_EQUAL, new NotEqualOperator<>()));
+    map.put("!", new OperatorElement(NodeKind.NOT_OPERATOR, OperatorPrecedence.NOT, new NotOperator()));
     all = map;
   }
 
@@ -23,10 +26,20 @@ public class Operator implements Node {
     this.name = name;
   }
 
+  /**
+   * Gets operator name.
+   *
+   * @return Name of operator in code.
+   */
   public String getName() {
     return name;
   }
 
+  /**
+   * Gets operator instance.
+   *
+   * @return Operator instance.
+   */
   public AnyOperator getOperator() {
     return all.get(name).operator;
   }
@@ -43,37 +56,59 @@ public class Operator implements Node {
 }
 
 
+/**
+ * Operator element, representing how the operator works.
+ */
 class OperatorElement {
   public final NodeKind nodeKind;
-  public final OperatorPresence presence;
+  public final OperatorPrecedence precedence;
   public final AnyOperator operator;
 
-  OperatorElement(NodeKind nodeKind, OperatorPresence presence, AnyOperator operator) {
+  OperatorElement(NodeKind nodeKind, OperatorPrecedence precedence, AnyOperator operator) {
     this.nodeKind = nodeKind;
-    this.presence = presence;
+    this.precedence = precedence;
     this.operator = operator;
   }
 }
 
 
-enum OperatorPresence {
+/**
+ * Operator precedence, determining the priority of adjacent operators.
+ */
+enum OperatorPrecedence {
   NOT_EQUAL(1),
   NOT(2);
 
   private final int priority;
 
-  OperatorPresence(int priority) {
+  OperatorPrecedence(int priority) {
     this.priority = priority;
   }
 
-  public boolean isHigherThan(OperatorPresence presence) {
-    return priority > presence.priority;
+  /**
+   * Gets if this operator has a higher
+   * precedence than the given operator.
+   *
+   * @param precedence Other operator precedence to compare.
+   * @return If this operator has a higher precedence.
+   */
+  public boolean isHigherThan(OperatorPrecedence precedence) {
+    return priority > precedence.priority;
   }
 }
 
 
-interface AnyOperator {};
+/**
+ * Represents any operator kind.
+ */
+interface AnyOperator {}
 
+/**
+ * Represents a prefix operator.
+ *
+ * @param <Right> Right side input.
+ * @param <Output> Output of operation.
+ */
 abstract class PrefixOperator<Right, Output> implements AnyOperator {
   /**
    * Calculates output from the given input.
@@ -84,6 +119,13 @@ abstract class PrefixOperator<Right, Output> implements AnyOperator {
   public abstract Output calculate(Right right);
 }
 
+/**
+ * Represents an infix operator.
+ *
+ * @param <Left> Left side input.
+ * @param <Right> Right side input.
+ * @param <Output> Output of operation.
+ */
 abstract class InfixOperator<Left, Right, Output> implements AnyOperator {
   /**
    * Calculates output from the given input.
@@ -96,7 +138,10 @@ abstract class InfixOperator<Left, Right, Output> implements AnyOperator {
 }
 
 
-class NotOperator<Value extends Equatable<?>> extends PrefixOperator<Boolean, Boolean> {
+/**
+ * Represents a not operator. Inverts a boolean value.
+ */
+class NotOperator extends PrefixOperator<Boolean, Boolean> {
   /**
    * Calculates output from the given input.
    *
@@ -109,6 +154,11 @@ class NotOperator<Value extends Equatable<?>> extends PrefixOperator<Boolean, Bo
   }
 }
 
+/**
+ * Represents a not equal operator. Checks if two values are not equal.
+ *
+ * @param <Value> Generic equatable value to compare.
+ */
 class NotEqualOperator<Value extends Equatable<?>> extends InfixOperator<Value, Value, Boolean> {
   /**
    * Calculates output from the given input.
