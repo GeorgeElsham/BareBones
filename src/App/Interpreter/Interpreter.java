@@ -18,6 +18,7 @@ public class Interpreter {
     try {
       final SyntacticAnalysisResult result = syntacticAnalysis(tokens);
       result.execute();
+      execution.printExecutionTable();
     } catch (InvalidSyntax invalidSyntax) {
       final String msg = "Invalid syntax for token index '%d': %s";
       final String formattedMsg = String.format(msg, invalidSyntax.tokenIndex, invalidSyntax.message);
