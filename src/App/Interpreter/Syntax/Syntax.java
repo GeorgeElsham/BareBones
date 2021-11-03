@@ -1,7 +1,7 @@
 package App.Interpreter.Syntax;
 
 import App.ExitCode;
-import App.Interpreter.InterpreterException.InvalidInteger;
+import App.Interpreter.InterpreterException.RuntimeError;
 import App.Interpreter.Node.NodeKind;
 import App.Interpreter.Node.Nodes.*;
 import App.Interpreter.ParseTree;
@@ -32,7 +32,7 @@ public abstract class Syntax {
             final IntegerIdentifier identifierRight = (IntegerIdentifier) input.nodes[3];
             try {
               identifierRight.set(identifierLeft.getValue());
-            } catch (InvalidInteger invalidInteger) {
+            } catch (RuntimeError runtimeError) {
               System.exit(ExitCode.IMPOSSIBLE_STATE);
             }
           }

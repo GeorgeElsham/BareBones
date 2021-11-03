@@ -1,6 +1,6 @@
 package App.Interpreter.Syntax;
 
-import App.Interpreter.InterpreterException.InvalidInteger;
+import App.Interpreter.InterpreterException.RuntimeError;
 import App.Interpreter.Node.*;
 
 public class SyntaxElement {
@@ -20,11 +20,11 @@ public class SyntaxElement {
     return nodeKinds[index];
   }
 
-  public void run(SyntaxInput input) throws InvalidInteger {
+  public void run(SyntaxInput input) throws RuntimeError {
     syntaxToCode.run(input);
   }
 }
 
 interface SyntaxToCode {
-  void run(SyntaxInput input) throws InvalidInteger;
+  void run(SyntaxInput input) throws RuntimeError;
 }

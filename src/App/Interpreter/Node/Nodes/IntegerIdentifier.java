@@ -1,7 +1,7 @@
 package App.Interpreter.Node.Nodes;
 
 import App.Interpreter.Execution;
-import App.Interpreter.InterpreterException.InvalidInteger;
+import App.Interpreter.InterpreterException.RuntimeError;
 import App.Interpreter.Node.*;
 import App.Interpreter.Node.Protocols.*;
 
@@ -36,9 +36,9 @@ public class IntegerIdentifier implements Node, Equatable<Integer>, IntegerValue
   /**
    * Decrement variable value by 1.
    *
-   * @throws InvalidInteger Invalid integer error if it goes negative.
+   * @throws RuntimeError Invalid integer error if it goes negative.
    */
-  public void decrement() throws InvalidInteger {
+  public void decrement() throws RuntimeError {
     execution.decrementVariable(name);
   }
 
@@ -53,9 +53,9 @@ public class IntegerIdentifier implements Node, Equatable<Integer>, IntegerValue
    * Set exact variable value.
    *
    * @param value New value.
-   * @throws InvalidInteger Invalid integer error if negative.
+   * @throws RuntimeError Invalid integer error if negative.
    */
-  public void set(int value) throws InvalidInteger {
+  public void set(int value) throws RuntimeError {
     execution.setVariable(name, value);
   }
 

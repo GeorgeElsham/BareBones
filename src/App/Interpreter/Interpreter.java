@@ -24,10 +24,8 @@ public class Interpreter {
       final String formattedMsg = String.format(msg, invalidSyntax.tokenIndex, invalidSyntax.message);
       System.err.println(formattedMsg);
       System.exit(ExitCode.PROGRAM_ERROR);
-    } catch (InvalidInteger invalidInteger) {
-      final String msg = "Invalid integer '%d' in '%s'";
-      final String formattedMsg = String.format(msg, invalidInteger.value, invalidInteger.name);
-      System.err.println(formattedMsg);
+    } catch (RuntimeError runtimeError) {
+      System.err.println(runtimeError.message);
       System.exit(ExitCode.PROGRAM_ERROR);
     }
   }
@@ -154,7 +152,7 @@ record SyntacticAnalysisResult(int blockLength, ParseTree[] parseTrees) {
     return parseTrees;
   }
 
-  public void execute(Execution execution) throws InvalidInteger {
+  public void execute(Execution execution) throws RuntimeError {
     for (ParseTree parseTree : parseTrees) {
       parseTree.run(execution);
     }

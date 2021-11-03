@@ -1,7 +1,7 @@
 package App.Interpreter;
 
 import App.ExitCode;
-import App.Interpreter.InterpreterException.InvalidInteger;
+import App.Interpreter.InterpreterException.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -12,12 +12,12 @@ public class Execution {
   public void clearVariable(String name) {
     try {
       setVariable(name, 0);
-    } catch (InvalidInteger invalidInteger) {
+    } catch (RuntimeError runtimeError) {
       System.exit(ExitCode.IMPOSSIBLE_STATE);
     }
   }
 
-  public void decrementVariable(String name) throws InvalidInteger {
+  public void decrementVariable(String name) throws RuntimeError {
     final int currentValue = getVariable(name);
     setVariable(name, currentValue - 1);
   }
@@ -36,15 +36,15 @@ public class Execution {
 
     try {
       setVariable(name, currentValue + 1);
-    } catch (InvalidInteger invalidInteger) {
+    } catch (RuntimeError invalidInteger) {
       System.exit(ExitCode.IMPOSSIBLE_STATE);
     }
   }
 
-  public void setVariable(String name, int value) throws InvalidInteger {
+  public void setVariable(String name, int value) throws RuntimeError {
     System.out.println("Set " + name + " to " + value);
     if (value < 0) {
-      throw new InvalidInteger(name, value);
+      throw new RuntimeError("Invalid integer '" + value + "' in '" + name + "'");
     }
     final List<Integer> currentValue = record.get(name);
 
@@ -73,10 +73,15 @@ public class Execution {
    * @param name Name of function to run.
    * @param args Arguments to pass to the function.
    * @return Function's returning result.
-   * @throws InvalidInteger Errors when running function.
+   * @throws RuntimeError Runtime errors.
    */
-  public Object runFunction(String name, Object[] args) throws InvalidInteger {
-    return functions.get(name).run(args);
+  public Object runFunction(String name, Object[] args) throws RuntimeError {
+    final CodeBlock block = functions.get(name);
+    if (block == null) {
+      throw new RuntimeError("Call to non-existent function '" + name + "'");
+    } else {
+      return block.run(args);
+    }
   }
 
   /**
