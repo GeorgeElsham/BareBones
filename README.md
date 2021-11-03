@@ -6,31 +6,45 @@ This is an interpreter for a language known as Bare Bones. It's a very simple la
 
 ## Syntax
 
-Reset variable `X`'s value to `0`. Not needed to initialize a variable.
+### Clear variable
+
+Reset variable `X`'s value to `0`:
 
 ```
 clear X;
 ```
 
-Increment variable `X` by 1.
+<sup>Not needed to initialize a variable.</sup>
+
+### Increment variable
+
+Increment variable `X` by 1:
 
 ```
 incr X;
 ```
 
-Decrement variable `X` by 1. Be careful, the result can't be negative!
+### Decrement variable
+
+Decrement variable `X` by 1:
 
 ```
 decr X;
 ```
 
-Copy variable `X` to variable `Y`.
+<sup>Be careful, the result can't be negative!</sup>
+
+### Copy to a variable
+
+Copy variable `X` to variable `Y`:
 
 ```
 copy X to Y;
 ```
 
-While loop, repeating whilst the conditional expression is true. This will start with `X` as `2`, then loop until `X` is `0`.
+### While loops
+
+While loop, repeating whilst the conditional expression is true:
 
 ```
 incr X;
@@ -40,6 +54,9 @@ while X not 0 do;
 end;
 ```
 
+<sup>This example will start with `X` as `2`, then loop until `X` is `0`.</sup>
+
+
 ## Boolean expressions
 
-Currently only simple boolean expressions are supported (left + right side with operator in between).
+Currently, only simple boolean expressions are supported (left + right side with operator in between).
