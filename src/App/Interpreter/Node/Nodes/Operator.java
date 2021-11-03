@@ -14,7 +14,8 @@ public class Operator implements Node {
 
   static {
     HashMap<String, OperatorElement> map = new HashMap<>();
-    map.put("not", new OperatorElement(NodeKind.NOT_EQUALS_OPERATOR, OperatorPrecedence.NOT_EQUAL, new NotEqualsOperator<>()));
+    map.put("equals", new OperatorElement(NodeKind.EQUALS_OPERATOR, OperatorPrecedence.EQUALS, new EqualsOperator<>()));
+    map.put("not", new OperatorElement(NodeKind.NOT_EQUALS_OPERATOR, OperatorPrecedence.NOT_EQUALS, new NotEqualsOperator<>()));
     map.put("!", new OperatorElement(NodeKind.NOT_OPERATOR, OperatorPrecedence.NOT, new NotOperator()));
     all = map;
   }
@@ -76,7 +77,8 @@ class OperatorElement {
  * Operator precedence, determining the priority of adjacent operators.
  */
 enum OperatorPrecedence {
-  NOT_EQUAL(1),
+  EQUALS(1),
+  NOT_EQUALS(1),
   NOT(2);
 
   private final int priority;
@@ -137,6 +139,25 @@ abstract class InfixOperator<Left, Right, Output> implements AnyOperator {
   public abstract Output calculate(Left left, Right right);
 }
 
+
+/**
+ * Represents an equals operator. Checks if two values are equal.
+ *
+ * @param <Value> Generic equatable value to compare.
+ */
+class EqualsOperator<Value extends Equatable<?>> extends InfixOperator<Value, Value, Boolean> {
+  /**
+   * Calculates output from the given input.
+   *
+   * @param left  Value to left of operator.
+   * @param right Value to right of operator.
+   * @return Output result of calculation.
+   */
+  @Override
+  public Boolean calculate(Value left, Value right) {
+    return Equatable.isEqual(left, right);
+  }
+}
 
 /**
  * Represents a not operator. Inverts a boolean value.
