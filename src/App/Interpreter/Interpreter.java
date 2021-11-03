@@ -17,7 +17,7 @@ public class Interpreter {
 
     try {
       final SyntacticAnalysisResult result = syntacticAnalysis(tokens);
-      result.execute();
+      result.execute(execution);
       execution.printExecutionTable();
     } catch (InvalidSyntax invalidSyntax) {
       final String msg = "Invalid syntax for token index '%d': %s";
@@ -36,7 +36,9 @@ public class Interpreter {
     final String removedComments = code.replaceAll("^ *#.*", "");
     final String removedNewLines = removedComments.replaceAll(" *\\n *", "");
     final String removedSemicolonSpaces = removedNewLines.replaceAll(" *; *", " ; ");
-    return removedSemicolonSpaces.replaceAll(" {2,}", " ");
+    final String spaceOpenBrackets = removedSemicolonSpaces.replace("(", " ( ");
+    final String spaceClosedBrackets = spaceOpenBrackets.replace(")", " ) ");
+    return spaceClosedBrackets.replaceAll(" {2,}", " ");
   }
 
   private List<Node> tokenizer(String code) {
@@ -152,9 +154,9 @@ record SyntacticAnalysisResult(int blockLength, ParseTree[] parseTrees) {
     return parseTrees;
   }
 
-  public void execute() throws InvalidInteger {
+  public void execute(Execution execution) throws InvalidInteger {
     for (ParseTree parseTree : parseTrees) {
-      parseTree.run();
+      parseTree.run(execution);
     }
   }
 }

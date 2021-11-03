@@ -7,6 +7,7 @@ import java.util.stream.*;
 
 public class Execution {
   private final LinkedHashMap<String, List<Integer>> record = new LinkedHashMap<>();
+  private final HashMap<String, CodeBlock> functions = new HashMap<>();
 
   public void clearVariable(String name) {
     try {
@@ -54,6 +55,28 @@ public class Execution {
       copy.add(value);
       record.put(name, copy);
     }
+  }
+
+  /**
+   * Adds the function to the collection of known functions.
+   *
+   * @param name Name of function to add.
+   * @param block Code block to execute when ran.
+   */
+  public void addFunction(String name, CodeBlock block) {
+    functions.put(name, block);
+  }
+
+  /**
+   * Runs a function.
+   *
+   * @param name Name of function to run.
+   * @param args Arguments to pass to the function.
+   * @return Function's returning result.
+   * @throws InvalidInteger Errors when running function.
+   */
+  public Object runFunction(String name, Object[] args) throws InvalidInteger {
+    return functions.get(name).run(args);
   }
 
   /**

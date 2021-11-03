@@ -2,7 +2,6 @@ package App.Interpreter.Syntax;
 
 import App.Interpreter.InterpreterException.InvalidInteger;
 import App.Interpreter.Node.*;
-import App.Interpreter.ParseTree;
 
 public class SyntaxElement {
   private final NodeKind[] nodeKinds;
@@ -21,11 +20,11 @@ public class SyntaxElement {
     return nodeKinds[index];
   }
 
-  public void run(Node[] nodes, ParseTree[] parseTrees) throws InvalidInteger {
-    syntaxToCode.run(nodes, parseTrees);
+  public void run(SyntaxInput input) throws InvalidInteger {
+    syntaxToCode.run(input);
   }
 }
 
 interface SyntaxToCode {
-  void run(Node[] nodes, ParseTree[] parseTrees) throws InvalidInteger;
+  void run(SyntaxInput input) throws InvalidInteger;
 }

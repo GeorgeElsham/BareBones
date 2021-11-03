@@ -14,8 +14,8 @@ public abstract class Syntax {
               NodeKind.INTEGER_IDENTIFIER,
               NodeKind.LINE_TERMINATOR
           },
-          (nodes, parseTrees) -> {
-            final IntegerIdentifier identifier = (IntegerIdentifier) nodes[1];
+          input -> {
+            final IntegerIdentifier identifier = (IntegerIdentifier) input.nodes[1];
             identifier.clear();
           }
       ),
@@ -27,9 +27,9 @@ public abstract class Syntax {
               NodeKind.INTEGER_IDENTIFIER,
               NodeKind.LINE_TERMINATOR
           },
-          (nodes, parseTrees) -> {
-            final IntegerIdentifier identifierLeft = (IntegerIdentifier) nodes[1];
-            final IntegerIdentifier identifierRight = (IntegerIdentifier) nodes[3];
+          input -> {
+            final IntegerIdentifier identifierLeft = (IntegerIdentifier) input.nodes[1];
+            final IntegerIdentifier identifierRight = (IntegerIdentifier) input.nodes[3];
             try {
               identifierRight.set(identifierLeft.getValue());
             } catch (InvalidInteger invalidInteger) {
@@ -43,9 +43,43 @@ public abstract class Syntax {
               NodeKind.INTEGER_IDENTIFIER,
               NodeKind.LINE_TERMINATOR
           },
-          (nodes, parseTrees) -> {
-            final IntegerIdentifier identifier = (IntegerIdentifier) nodes[1];
+          input -> {
+            final IntegerIdentifier identifier = (IntegerIdentifier) input.nodes[1];
             identifier.decrement();
+          }
+      ),
+      new SyntaxElement(
+          new NodeKind[] {
+              NodeKind.FUNC_KEYWORD,
+              NodeKind.INTEGER_IDENTIFIER,
+              NodeKind.OPEN_BRACKET,
+              NodeKind.CLOSE_BRACKET,
+              NodeKind.LINE_TERMINATOR,
+              NodeKind.BLOCK,
+              NodeKind.END_KEYWORD,
+              NodeKind.LINE_TERMINATOR
+          },
+          input -> {
+            final IntegerIdentifier identifier = (IntegerIdentifier) input.nodes[1];
+
+            input.execution.addFunction(identifier.getName(), args -> {
+              for (ParseTree parseTree : input.parseTrees[0].parseTrees()) {
+                parseTree.run(input.execution);
+              }
+              return null;
+            });
+          }
+      ),
+      new SyntaxElement(
+          new NodeKind[] {
+              NodeKind.INTEGER_IDENTIFIER,
+              NodeKind.OPEN_BRACKET,
+              NodeKind.CLOSE_BRACKET,
+              NodeKind.LINE_TERMINATOR
+          },
+          input -> {
+            final IntegerIdentifier identifier = (IntegerIdentifier) input.nodes[0];
+            input.execution.runFunction(identifier.getName(), new Object[] {});
           }
       ),
       new SyntaxElement(
@@ -54,8 +88,8 @@ public abstract class Syntax {
               NodeKind.INTEGER_IDENTIFIER,
               NodeKind.LINE_TERMINATOR
           },
-          (nodes, parseTrees) -> {
-            final IntegerIdentifier identifier = (IntegerIdentifier) nodes[1];
+          input -> {
+            final IntegerIdentifier identifier = (IntegerIdentifier) input.nodes[1];
             identifier.increment();
           }
       ),
@@ -69,12 +103,12 @@ public abstract class Syntax {
               NodeKind.END_KEYWORD,
               NodeKind.LINE_TERMINATOR
           },
-          (nodes, parseTrees) -> {
-            final BooleanExpression expression = (BooleanExpression) nodes[1];
+          input -> {
+            final BooleanExpression expression = (BooleanExpression) input.nodes[1];
 
             while (expression.evaluate()) {
-              for (ParseTree parseTree : parseTrees) {
-                parseTree.run();
+              for (ParseTree parseTree : input.parseTrees) {
+                parseTree.run(input.execution);
               }
             }
           }

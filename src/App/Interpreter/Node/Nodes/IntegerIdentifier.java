@@ -18,6 +18,15 @@ public class IntegerIdentifier implements Node, Equatable<Integer>, IntegerValue
   }
 
   /**
+   * Gets name of identifier.
+   *
+   * @return Name string.
+   */
+  public String getName() {
+    return name;
+  }
+
+  /**
    * Clear variable value.
    */
   public void clear() {

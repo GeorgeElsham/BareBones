@@ -16,6 +16,7 @@ public class CreateNode {
     final Node node = readNode(
         string,
         this::createLineTerminator,
+        this::createBracket,
         this::createIntegerLiteral,
         this::createKeyword,
         this::createOperator,
@@ -37,6 +38,14 @@ public class CreateNode {
       }
     }
     return null;
+  }
+
+  private Bracket createBracket(String string) {
+    return switch (string) {
+      case "(" -> new Bracket(Bracket.Kind.OPEN);
+      case ")" -> new Bracket(Bracket.Kind.CLOSE);
+      default -> null;
+    };
   }
 
   private IntegerIdentifier createIntegerIdentifier(String string) {
