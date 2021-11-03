@@ -56,6 +56,23 @@ end;
 
 <sup>This example will start with `X` as `2`, then loop until `X` is `0`.</sup>
 
+### Functions
+
+You can create a function, then call it later in the program:
+
+```
+func doubleIncrA();
+  incr A;
+  incr A;
+end;
+
+/* ... */
+
+doubleIncrA();
+```
+
+<sup>Functions must be declared before they are used.</sup>
+
 
 ## Boolean expressions
 
