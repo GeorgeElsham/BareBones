@@ -14,7 +14,7 @@ public class Operator implements Node {
 
   static {
     HashMap<String, OperatorElement> map = new HashMap<>();
-    map.put("not", new OperatorElement(NodeKind.NOT_EQUAL_OPERATOR, OperatorPrecedence.NOT_EQUAL, new NotEqualOperator<>()));
+    map.put("not", new OperatorElement(NodeKind.NOT_EQUALS_OPERATOR, OperatorPrecedence.NOT_EQUAL, new NotEqualOperator<>()));
     map.put("!", new OperatorElement(NodeKind.NOT_OPERATOR, OperatorPrecedence.NOT, new NotOperator()));
     all = map;
   }
