@@ -6,7 +6,7 @@ This is an interpreter for a language known as Bare Bones. It's a very simple la
 
 ## Syntax
 
-### Clear variable
+### Clear a variable
 
 Reset variable `X`'s value to `0`:
 
@@ -16,7 +16,7 @@ clear X;
 
 <sup>Not needed to initialize a variable.</sup>
 
-### Increment variable
+### Increment a variable
 
 Increment variable `X` by 1:
 
@@ -24,7 +24,7 @@ Increment variable `X` by 1:
 incr X;
 ```
 
-### Decrement variable
+### Decrement a variable
 
 Decrement variable `X` by 1:
 
@@ -40,6 +40,18 @@ Copy variable `X` to variable `Y`:
 
 ```
 copy X to Y;
+```
+
+### If statements
+
+Conditionals, to run code if the conditional expression is true:
+
+```
+incr A;
+if A equals 1 do;
+  incr B;
+  decr A;
+end;
 ```
 
 ### While loops
