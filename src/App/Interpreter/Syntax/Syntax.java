@@ -72,6 +72,26 @@ public abstract class Syntax {
       ),
       new SyntaxElement(
           new NodeKind[] {
+              NodeKind.IF_KEYWORD,
+              NodeKind.BOOLEAN_EXPRESSION,
+              NodeKind.DO_KEYWORD,
+              NodeKind.LINE_TERMINATOR,
+              NodeKind.BLOCK,
+              NodeKind.END_KEYWORD,
+              NodeKind.LINE_TERMINATOR
+          },
+          input -> {
+            final BooleanExpression expression = (BooleanExpression) input.nodes[1];
+
+            if (expression.evaluate()) {
+              for (ParseTree parseTree : input.parseTrees) {
+                parseTree.run(input.execution);
+              }
+            }
+          }
+      ),
+      new SyntaxElement(
+          new NodeKind[] {
               NodeKind.INTEGER_IDENTIFIER,
               NodeKind.OPEN_BRACKET,
               NodeKind.CLOSE_BRACKET,

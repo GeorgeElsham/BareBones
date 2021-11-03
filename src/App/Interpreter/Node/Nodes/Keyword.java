@@ -19,6 +19,7 @@ public class Keyword implements Node {
     map.put("do", NodeKind.DO_KEYWORD);
     map.put("end", NodeKind.END_KEYWORD);
     map.put("func", NodeKind.FUNC_KEYWORD);
+    map.put("if", NodeKind.IF_KEYWORD);
     map.put("incr", NodeKind.INCR_KEYWORD);
     map.put("to", NodeKind.TO_KEYWORD);
     map.put("while", NodeKind.WHILE_KEYWORD);
