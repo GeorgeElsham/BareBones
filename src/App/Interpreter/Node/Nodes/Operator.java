@@ -14,7 +14,7 @@ public class Operator implements Node {
 
   static {
     HashMap<String, OperatorElement> map = new HashMap<>();
-    map.put("not", new OperatorElement(NodeKind.NOT_EQUALS_OPERATOR, OperatorPrecedence.NOT_EQUAL, new NotEqualOperator<>()));
+    map.put("not", new OperatorElement(NodeKind.NOT_EQUALS_OPERATOR, OperatorPrecedence.NOT_EQUAL, new NotEqualsOperator<>()));
     map.put("!", new OperatorElement(NodeKind.NOT_OPERATOR, OperatorPrecedence.NOT, new NotOperator()));
     all = map;
   }
@@ -155,11 +155,11 @@ class NotOperator extends PrefixOperator<Boolean, Boolean> {
 }
 
 /**
- * Represents a not equal operator. Checks if two values are not equal.
+ * Represents a not equals operator. Checks if two values are not equal.
  *
  * @param <Value> Generic equatable value to compare.
  */
-class NotEqualOperator<Value extends Equatable<?>> extends InfixOperator<Value, Value, Boolean> {
+class NotEqualsOperator<Value extends Equatable<?>> extends InfixOperator<Value, Value, Boolean> {
   /**
    * Calculates output from the given input.
    *
