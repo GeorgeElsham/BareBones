@@ -42,7 +42,6 @@ public class Execution {
   }
 
   public void setVariable(String name, int value) throws RuntimeError {
-    System.out.println("Set " + name + " to " + value);
     if (value < 0) {
       throw new RuntimeError("Invalid integer '" + value + "' in '" + name + "'");
     }
